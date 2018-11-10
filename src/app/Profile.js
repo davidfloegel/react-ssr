@@ -5,7 +5,6 @@ import withSSR from './ssr'
 
 class Profile extends Component {
   static getInitialData() {
-    console.log('fetch data in getInitialData')
     return new Promise(resolve =>
       setTimeout(() => resolve({ username: 'David' }), 2000)
     )

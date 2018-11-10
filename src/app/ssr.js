@@ -1,7 +1,5 @@
 import React from 'react';
 
-const IS_FIRST_MOUNT_AFTER_LOAD = true
-
 // This is a Higher Order Component that abstracts duplicated data fetching
 // on the server and client.
 export default function SSR(Page) {
@@ -16,8 +14,6 @@ export default function SSR(Page) {
     constructor(props) {
       super(props);
 
-      console.log('ssr hoc', props)
-
       this.state = {
         data: props.serverData,
         isLoading: false,
@@ -26,8 +22,6 @@ export default function SSR(Page) {
     }
 
     componentDidMount() {
-      console.log('did mount', this.state.data)
-
       if (!this.state.data) {
         this.fetchData();
       }
@@ -41,7 +35,6 @@ export default function SSR(Page) {
       // if this.state.data is null, that means that the we are on the client.
       // To get the data we need, we just call getInitialData again on mount.
       if (!this.ignoreLastFetch) {
-        console.log('refetching');
         this.setState({ isLoading: true });
         this.constructor.getInitialData({ match: this.props.match }).then(
           data => {

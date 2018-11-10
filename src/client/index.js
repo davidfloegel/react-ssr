@@ -1,6 +1,6 @@
 import React from 'react';
 import { hydrate } from 'react-dom';
-import App from './shared'
+import App from '../app'
 import { BrowserRouter } from 'react-router-dom'
 import { loadableReady } from '@loadable/component'
 

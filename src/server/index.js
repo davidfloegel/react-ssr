@@ -5,8 +5,8 @@ import cors from 'cors'
 import { StaticRouter, matchPath } from 'react-router-dom'
 import { ServerStyleSheet } from 'styled-components'
 import { Helmet } from 'react-helmet'
-import routes from './routes'
-import App from './shared'
+import routes from '../app/routes'
+import App from '../app'
 import path from 'path'
 
 import { ChunkExtractor } from '@loadable/server'
@@ -14,10 +14,10 @@ import { ChunkExtractor } from '@loadable/server'
 const app = express()
 const port = 3000
 
-app.use(express.static(path.join(__dirname, '../public')))
+app.use(express.static(path.join(__dirname, '../../public')))
 
 if (process.env.NODE_ENV !== 'production') {
-  const { default: webpackConfig } = require('../webpack.config.babel')
+  const { default: webpackConfig } = require('../../webpack.config.babel')
   const webpackDevMiddleware = require('webpack-dev-middleware')
   const webpack = require('webpack')
 
@@ -36,12 +36,12 @@ if (process.env.NODE_ENV !== 'production') {
 
 const nodeStats = path.resolve(
   __dirname,
-  '../public/dist/node/loadable-stats.json',
+  '../../public/dist/node/loadable-stats.json',
 )
 
 const webStats = path.resolve(
   __dirname,
-  '../public/dist/web/loadable-stats.json',
+  '../../public/dist/web/loadable-stats.json',
 )
 
 const Html = ({ scriptTags, styles, helmet, markup, data }) => (
@@ -78,7 +78,6 @@ app.get('*', (req, res) => {
   })
 
   Promise.all(promises).then(data => {
-    console.log('resolved', data)
     const sheet = new ServerStyleSheet()
 
     const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats })

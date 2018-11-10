@@ -11,7 +11,7 @@ const getConfig = target => ({
   name: target,
   mode: development ? 'development' : 'production',
   target,
-  entry: `./src/${target === 'web' ? 'client.js' : 'main-node.js'}`,
+  entry: `./src/client/${target === 'web' ? 'index.js' : 'main-node.js'}`,
   module: {
     rules: [
       {

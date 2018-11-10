@@ -4,7 +4,6 @@ import express from 'express'
 import cors from 'cors'
 import { StaticRouter, matchPath } from 'react-router-dom'
 import { ServerStyleSheet } from 'styled-components'
-import webpackConfig from '../webpack.server.js';
 import { Helmet } from 'react-helmet'
 import routes from './routes'
 import App from './shared'

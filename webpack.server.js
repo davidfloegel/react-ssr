@@ -1,6 +1,10 @@
+const path = require('path')
 const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals')
 const LoadablePlugin = require('@loadable/webpack-plugin')
+
+const DIST_PATH = path.resolve(__dirname, 'public/dist')
+const production = process.env.NODE_ENV === 'production'
 
 module.exports = {
   mode: 'development',
@@ -15,10 +19,10 @@ module.exports = {
     ]
   },
   output: {
-    path: __dirname + '/dist',
-    publicPath: '/',
+    path: path.join(DIST_PATH, 'node'),
+    publicPath: '/dist/node',
     libraryTarget: 'commonjs2',
-    filename: 'server.js'
+    filename: production ? '[name]-bundle-[chunkhash:8].js' : '[name].js',
   },
   devServer: {
     contentBase: './dist',

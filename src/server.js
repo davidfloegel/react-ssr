@@ -3,8 +3,6 @@ import ReactDOMServer from 'react-dom/server'
 import express from 'express'
 import cors from 'cors'
 import { StaticRouter, matchPath } from 'react-router-dom'
-import webpackMiddleware from 'webpack-dev-middleware';
-import webpack from 'webpack';
 import { ServerStyleSheet } from 'styled-components'
 import webpackConfig from '../webpack.server.js';
 import { Helmet } from 'react-helmet'
@@ -17,20 +15,35 @@ import { ChunkExtractor } from '@loadable/server'
 const app = express()
 const port = 3000
 
-app.use(cors())
-app.use('/assets', express.static('./dist'))
+app.use(express.static(path.join(__dirname, '../public')))
 
-app.use(webpackMiddleware(webpack(webpackConfig), {
-  // logLevel: 'silent',
-  // publicPath: '/dist/web',
-  // writeToDisk: filePath => {
-  //   console.log(filePath)
-  //   return true
-  // }
-  // writeToDisk(filePath) {
-  //   return /dist\/loadable-manifest/.test(filePath)
-  // },
-}));
+if (process.env.NODE_ENV !== 'production') {
+  const { default: webpackConfig } = require('../webpack.config.babel')
+  const webpackDevMiddleware = require('webpack-dev-middleware')
+  const webpack = require('webpack')
+
+  const compiler = webpack(webpackConfig)
+
+  app.use(
+    webpackDevMiddleware(compiler, {
+      // logLevel: 'silent',
+      publicPath: '/dist/web',
+      writeToDisk(filePath) {
+        return /dist\/node\//.test(filePath) || /loadable-stats/.test(filePath)
+      },
+    }),
+  )
+}
+
+const nodeStats = path.resolve(
+  __dirname,
+  '../public/dist/node/loadable-stats.json',
+)
+
+const webStats = path.resolve(
+  __dirname,
+  '../public/dist/web/loadable-stats.json',
+)
 
 const Html = ({ scriptTags, styles, helmet, markup, data }) => (
   <html>
@@ -69,8 +82,10 @@ app.get('*', (req, res) => {
     console.log('resolved', data)
     const sheet = new ServerStyleSheet()
 
-    const statsFile = path.resolve('./dist/loadable-stats.json')
-    const extractor = new ChunkExtractor({ statsFile })
+    const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats })
+    const { default: App } = nodeExtractor.requireEntrypoint()
+
+    const webExtractor = new ChunkExtractor({ statsFile: webStats })
 
     const app = (
       <StaticRouter
@@ -81,7 +96,8 @@ app.get('*', (req, res) => {
       </StaticRouter>
     )
 
-    const jsx = extractor.collectChunks(app)
+    const jsx = webExtractor.collectChunks(app)
+
 
 
     const renderAppToString = ReactDOMServer.renderToString(
@@ -89,7 +105,7 @@ app.get('*', (req, res) => {
     )
     const helmet = Helmet.renderStatic()
     const styles = sheet.getStyleElement()
-    const scriptTags = extractor.getScriptElements()
+    const scriptTags = webExtractor.getScriptElements()
 
     const nodeStream = ReactDOMServer.renderToNodeStream(<Html
       helmet={helmet}
@@ -107,5 +123,5 @@ app.get('*', (req, res) => {
 })
 
 app.listen(port, () =>
-  console.log(`Example app listening on port ${port}!`)
+  console.log(`App listening on port ${port}!`)
 )

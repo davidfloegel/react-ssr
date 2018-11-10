@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const nodeExternals = require('webpack-node-externals')
+const LoadablePlugin = require('@loadable/webpack-plugin')
 
 module.exports = {
   mode: 'development',
@@ -9,7 +10,13 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: ['babel-loader']
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: ['dynamic-import-node']
+          }
+        }
       }
     ]
   },
@@ -34,5 +41,6 @@ module.exports = {
     __filename: false
   },
   target: 'node',
-  externals: [nodeExternals()]
+  externals: [nodeExternals()],
+  plugins: [new LoadablePlugin()],
 };

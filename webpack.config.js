@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const LoadablePlugin = require('@loadable/webpack-plugin')
 
 module.exports = {
   entry: './src/client.js',
@@ -20,7 +21,8 @@ module.exports = {
     filename: 'bundle.js'
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new LoadablePlugin()
   ],
   devServer: {
     contentBase: './dist',

@@ -3,8 +3,8 @@ import { Helmet } from 'react-helmet'
 import { Switch, Route, Link } from 'react-router-dom'
 import loadable from '@loadable/component'
 
+import Profile from './Profile'
 const Home = loadable(() => import('./Home'))
-const Profile = loadable(() => import('./Profile'))
 const Private = loadable(() => import('./Private'))
 const About = loadable(() => import('./About'))
 

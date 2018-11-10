@@ -10,15 +10,27 @@ import webpackConfig from '../webpack.server.js';
 import { Helmet } from 'react-helmet'
 import routes from './routes'
 import App from './shared'
+import path from 'path'
 
-import { LoadableState, LoadableStateManager } from '@loadable/server'
+import { ChunkExtractor } from '@loadable/server'
 
 const app = express()
 const port = 3000
 
-app.use(webpackMiddleware(webpack(webpackConfig)));
 app.use(cors())
 app.use('/assets', express.static('./dist'))
+
+app.use(webpackMiddleware(webpack(webpackConfig), {
+  // logLevel: 'silent',
+  // publicPath: '/dist/web',
+  // writeToDisk: filePath => {
+  //   console.log(filePath)
+  //   return true
+  // }
+  // writeToDisk(filePath) {
+  //   return /dist\/loadable-manifest/.test(filePath)
+  // },
+}));
 
 const Html = ({ scriptTags, styles, helmet, markup, data }) => (
   <html>
@@ -36,10 +48,6 @@ const Html = ({ scriptTags, styles, helmet, markup, data }) => (
         dangerouslySetInnerHTML={{ __html: markup }}
       ></div>
 
-      <script src="http://localhost:3001/bundle.js"></script>
-      {/* <script
-        dangerouslySetInnerHTML={{ __html: scriptTags }}
-      ></script> */}
       {scriptTags}
   </body>
   </html>
@@ -49,36 +57,39 @@ app.get('*', (req, res) => {
   const promises = []
   routes.some(route => {
     const match = matchPath(req.path, route);
-    
+
     if (match && route.component.getInitialData) {
       promises.push(route.component.getInitialData(match))
     }
-    
+
     return match
   })
-  
+
   Promise.all(promises).then(data => {
     console.log('resolved', data)
     const sheet = new ServerStyleSheet()
-    const loadableState = new LoadableState()
-    console.log(loadableState)
+
+    const statsFile = path.resolve('./dist/loadable-stats.json')
+    const extractor = new ChunkExtractor({ statsFile })
+
     const app = (
-      <LoadableStateManager state={loadableState}>
-        <StaticRouter
-          location={req.url}
-          context={{}}
-        >
-          <App serverData={data} />
-        </StaticRouter>
-      </LoadableStateManager>
+      <StaticRouter
+        location={req.url}
+        context={{}}
+      >
+        <App serverData={data} />
+      </StaticRouter>
     )
 
+    const jsx = extractor.collectChunks(app)
+
+
     const renderAppToString = ReactDOMServer.renderToString(
-      sheet.collectStyles(app)
+      sheet.collectStyles(jsx)
     )
     const helmet = Helmet.renderStatic()
     const styles = sheet.getStyleElement()
-    const scriptTags = loadableState.getScriptElements()
+    const scriptTags = extractor.getScriptElements()
 
     const nodeStream = ReactDOMServer.renderToNodeStream(<Html
       helmet={helmet}

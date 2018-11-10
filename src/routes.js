@@ -8,12 +8,12 @@ const Profile = loadable(() => import('./Profile'))
 const Private = loadable(() => import('./Private'))
 const About = loadable(() => import('./About'))
 
-// const JSXRoutes = () => (
-//   <Switch>
-//     <Route path="/about" component={About} />
-//     <Route path="/private" component={Private} />
-//   </Switch>
-// )
+const JSXRoutes = () => (
+  <Switch>
+    <Route path="/about" component={About} />
+    <Route path="/private" component={Private} />
+  </Switch>
+)
 
 export default [
   {
@@ -26,8 +26,8 @@ export default [
     exact: true,
     component: Profile,
   },
-  // {
-  //   path: '/',
-  //   component: JSXRoutes
-  // }
+  {
+    path: '/',
+    component: JSXRoutes
+  }
 ]

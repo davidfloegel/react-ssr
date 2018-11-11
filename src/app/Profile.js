@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Helmet } from 'react-helmet'
-import Nav from './Nav'
-import withSSR from './ssr'
+import Nav from 'components/Nav'
+import withSSR from 'app/ssr'
 
 class Profile extends Component {
   static getInitialData() {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import Nav from './Nav'
+import Nav from 'components/uikit/Nav'
 
 const About = () => (
   <div>

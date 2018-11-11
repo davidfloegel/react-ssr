@@ -1,6 +1,6 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import Nav from './Nav'
+import Nav from 'components/Nav'
 
 const Home = () => (
   <div>

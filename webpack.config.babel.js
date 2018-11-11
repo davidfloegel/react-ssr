@@ -27,12 +27,19 @@ const getConfig = target => ({
     ],
   },
   externals:
-    target === 'node' ? ['@loadable/component', nodeExternals()] : undefined,
+  target === 'node' ? ['@loadable/component', nodeExternals()] : undefined,
   output: {
     path: path.join(DIST_PATH, target),
     filename: production ? '[name]-bundle-[chunkhash:8].js' : '[name].js',
     publicPath: `/dist/${target}/`,
     libraryTarget: target === 'node' ? 'commonjs2' : undefined,
+  },
+  resolve: {
+    modules: ['./src', 'node_modules'],
+    alias: {
+      app: path.join(__dirname, './src/app'),
+      components: path.join(__dirname, './src/app/components'),
+    }
   },
   plugins: [new LoadablePlugin()],
 })

@@ -10,7 +10,7 @@
 
 ## Installation
 
-* `git clonegit@github.com:davidfloegel/react-ssr.git`
+* `git clone git@github.com:davidfloegel/react-ssr.git`
 * cd react-ssr
 * yarn install
 * yarn start

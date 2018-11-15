@@ -1,125 +1,109 @@
-import React from 'react'
-import ReactDOMServer from 'react-dom/server'
-import express from 'express'
-import cors from 'cors'
-import { StaticRouter, matchPath } from 'react-router-dom'
-import { ServerStyleSheet } from 'styled-components'
-import { Helmet } from 'react-helmet'
-import routes from '../app/routes'
-import App from '../app'
-import path from 'path'
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import express from 'express';
+import cors from 'cors';
+import { StaticRouter, matchPath } from 'react-router-dom';
+import { ServerStyleSheet } from 'styled-components';
+import { Helmet } from 'react-helmet';
+import routes from '../app/routes';
+import App from '../app';
+import path from 'path';
+import Html from './html';
+import { ChunkExtractor } from '@loadable/server';
 
-import { ChunkExtractor } from '@loadable/server'
+const app = express();
+const port = 3000;
 
-const app = express()
-const port = 3000
-
-app.use(express.static(path.join(__dirname, '../../public')))
+app.use(express.static(path.join(__dirname, '../../public')));
 
 if (process.env.NODE_ENV !== 'production') {
-  const { default: webpackConfig } = require('../../webpack.config.babel')
-  const webpackDevMiddleware = require('webpack-dev-middleware')
-  const webpack = require('webpack')
+  const { default: webpackConfig } = require('../../webpack.config.babel');
+  const webpackDevMiddleware = require('webpack-dev-middleware');
+  const webpack = require('webpack');
 
-  const compiler = webpack(webpackConfig)
+  const compiler = webpack(webpackConfig);
 
   app.use(
     webpackDevMiddleware(compiler, {
       // logLevel: 'silent',
       publicPath: '/dist/web',
       writeToDisk(filePath) {
-        return /dist\/node\//.test(filePath) || /loadable-stats/.test(filePath)
-      },
-    }),
-  )
+        return /dist\/node\//.test(filePath) || /loadable-stats/.test(filePath);
+      }
+    })
+  );
 }
 
 const nodeStats = path.resolve(
   __dirname,
-  '../../public/dist/node/loadable-stats.json',
-)
+  '../../public/dist/node/loadable-stats.json'
+);
 
 const webStats = path.resolve(
   __dirname,
-  '../../public/dist/web/loadable-stats.json',
-)
-
-const Html = ({ scriptTags, styles, helmet, markup, data }) => (
-  <html>
-    <head>
-      {helmet.title.toComponent()}
-      <style dangerouslySetInnerHTML={{ __html: styles }}></style>
-    </head>
-    <body>
-      <script dangerouslySetInnerHTML={{ __html:
-        `window._INITIAL_DATA_ = ${JSON.stringify(data)}`
-      }} />
-
-      <div
-        id="root"
-        dangerouslySetInnerHTML={{ __html: markup }}
-      ></div>
-
-      {scriptTags}
-  </body>
-  </html>
-)
+  '../../public/dist/web/loadable-stats.json'
+);
 
 app.get('*', (req, res) => {
-  const promises = []
+  // check if a current route has a request that needs to be waited for
+  const promises = [];
   routes.some(route => {
     const match = matchPath(req.path, route);
 
     if (match && route.component.getInitialData) {
-      promises.push(route.component.getInitialData(match))
+      promises.push(route.component.getInitialData(match));
     }
 
-    return match
-  })
+    return match;
+  });
 
   Promise.all(promises).then(data => {
-    const sheet = new ServerStyleSheet()
+    const sheet = new ServerStyleSheet();
 
-    const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats })
-    const { default: App } = nodeExtractor.requireEntrypoint()
+    // load the stats files definining the chunks from @loadable/component
+    const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
+    const { default: App } = nodeExtractor.requireEntrypoint();
+    const webExtractor = new ChunkExtractor({ statsFile: webStats });
 
-    const webExtractor = new ChunkExtractor({ statsFile: webStats })
-
+    // render the app in the static router
     const app = (
-      <StaticRouter
-        location={req.url}
-        context={{}}
-      >
+      <StaticRouter location={req.url} context={{}}>
         <App serverData={data} />
       </StaticRouter>
-    )
+    );
 
-    const jsx = webExtractor.collectChunks(app)
+    // get all cunks
+    const jsx = webExtractor.collectChunks(app);
 
-
-
+    // render the app to a string and collect all styled-component styles
     const renderAppToString = ReactDOMServer.renderToString(
       sheet.collectStyles(jsx)
-    )
-    const helmet = Helmet.renderStatic()
-    const styles = sheet.getStyleElement()
-    const scriptTags = webExtractor.getScriptElements()
+    );
 
-    const nodeStream = ReactDOMServer.renderToNodeStream(<Html
-      helmet={helmet}
-      styles={styles}
-      markup={renderAppToString}
-      data={data}
-      scriptTags={scriptTags}
-    />)
+    // get helmet, styles and chunk information
+    const helmet = Helmet.renderStatic();
+    const styles = sheet.getStyleElement();
+    const scriptTags = webExtractor.getScriptElements();
 
-    const stream = sheet.interleaveWithNodeStream(nodeStream)
+    // generate stream
+    const nodeStream = ReactDOMServer.renderToNodeStream(
+      <Html
+        helmet={helmet}
+        styles={styles}
+        markup={renderAppToString}
+        data={data}
+        scriptTags={scriptTags}
+      />
+    );
 
-    stream.pipe(res, { end: false })
-    stream.on('end', () => res.send())
-  })
-})
+    const stream = sheet.interleaveWithNodeStream(nodeStream);
 
-app.listen(port, () =>
-  console.log(`App listening on port ${port}!`)
-)
+    stream.pipe(
+      res,
+      { end: false }
+    );
+    stream.on('end', () => res.send());
+  });
+});
+
+app.listen(port, () => console.log(`App listening on port ${port}!`));

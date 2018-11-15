@@ -1,19 +1,11 @@
-import React from 'react'
-import { Helmet } from 'react-helmet'
-import { Switch, Route, Link } from 'react-router-dom'
-import loadable from '@loadable/component'
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import { Switch, Route, Link } from 'react-router-dom';
+import loadable from '@loadable/component';
 
-import Profile from './Profile'
-const Home = loadable(() => import('./Home'))
-const Private = loadable(() => import('./Private'))
-const About = loadable(() => import('./About'))
-
-const JSXRoutes = () => (
-  <Switch>
-    <Route path="/about" component={About} />
-    <Route path="/private" component={Private} />
-  </Switch>
-)
+const Home = loadable(() => import('app/Home'));
+const Private = loadable(() => import('app/Private'));
+const Profile = loadable(() => import('app/Profile'));
 
 export default [
   {
@@ -24,10 +16,11 @@ export default [
   {
     path: '/profile',
     exact: true,
-    component: Profile,
+    component: Profile
   },
   {
-    path: '/',
-    component: JSXRoutes
+    path: '/private',
+    exact: true,
+    component: Private
   }
-]
+];

@@ -1,5 +1,9 @@
 # React SSR
 
+## TODO
+
+- [ ] Hot Module Reloading
+
 ## Features
 
 * React 16

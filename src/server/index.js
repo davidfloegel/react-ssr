@@ -1,28 +1,30 @@
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
+import path from 'path';
 import express from 'express';
 import cors from 'cors';
 import { StaticRouter, matchPath } from 'react-router-dom';
 import { ServerStyleSheet } from 'styled-components';
 import { Helmet } from 'react-helmet';
+import { ChunkExtractor } from '@loadable/server';
+import chokidar from 'chokidar';
 import routes from '../app/routes';
 import App from '../app';
-import path from 'path';
 import Html from './html';
-import { ChunkExtractor } from '@loadable/server';
 
 const app = express();
 const port = 3000;
+const isDev = process.env.NODE_ENV !== 'production';
 
 app.use(express.static(path.join(__dirname, '../../public')));
 
-if (process.env.NODE_ENV !== 'production') {
+let compiler = null;
+if (isDev) {
   const { default: webpackConfig } = require('../../webpack.config.babel');
-  // console.log(webpackConfig);
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpack = require('webpack');
 
-  const compiler = webpack(webpackConfig);
+  compiler = webpack(webpackConfig);
 
   app.use(
     webpackDevMiddleware(compiler, {
@@ -114,5 +116,43 @@ app.get('*', (req, res) => {
     stream.on('end', () => res.send());
   });
 });
+
+if (isDev) {
+  const logMessage = id => {
+    // eslint-disable-next-line
+    console.log(`Clearing cache on: /server/${id}`);
+  };
+
+  // Do "hot-reloading" of express stuff on the server
+  // Throw away cached modules and re-require next time
+  // Ensure there's no important state in there!
+  const watcher = chokidar.watch('.', { ignored: /[/\\]node_modules[/\\]/ });
+
+  watcher.on('ready', () => {
+    console.log('watcher ready');
+    Object.keys(require.cache).forEach(id => {
+      if (/[/\\]server[/\\]/.test(id)) {
+        logMessage(id.split(/[/\\]server[/\\]/)[1]);
+        delete require.cache[id];
+      }
+    });
+  });
+
+  // Do "hot-reloading" of react code on the server
+  // Throw away the cached client modules and let them be re-required next time
+  compiler.plugin('done', () => {
+    // eslint-disable-next-line
+    console.log('Clearing /client/ module cache from server');
+    Object.keys(require.cache).forEach(id => {
+      if (/[/\\]client[/\\]/.test(id)) {
+        logMessage(id.split(/[/\\]client[/\\]/)[1]);
+        delete require.cache[id];
+      } else if (/[/\\]app[/\\]/.test(id)) {
+        logMessage(id.split(/[/\\]app[/\\]/)[1]);
+        delete require.cache[id];
+      }
+    });
+  });
+}
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));

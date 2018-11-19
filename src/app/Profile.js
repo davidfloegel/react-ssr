@@ -21,7 +21,7 @@ class Profile extends Component {
         <Helmet>
           <title>About {this.props.username}</title>
         </Helmet>
-        <b>This is about {this.props.username}</b>
+        <b>This is about the user {this.props.username}</b>
       </div>
     );
   }

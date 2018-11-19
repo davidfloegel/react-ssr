@@ -18,6 +18,7 @@ app.use(express.static(path.join(__dirname, '../../public')));
 
 if (process.env.NODE_ENV !== 'production') {
   const { default: webpackConfig } = require('../../webpack.config.babel');
+  // console.log(webpackConfig);
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpack = require('webpack');
 
@@ -26,10 +27,18 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(
     webpackDevMiddleware(compiler, {
       // logLevel: 'silent',
+      noInfo: true,
       publicPath: '/dist/web',
       writeToDisk(filePath) {
         return /dist\/node\//.test(filePath) || /loadable-stats/.test(filePath);
       }
+    })
+  );
+
+  app.use(
+    require('webpack-hot-middleware')(compiler, {
+      // eslint-disable-next-line
+      log: console.log
     })
   );
 }

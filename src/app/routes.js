@@ -5,7 +5,7 @@ import loadable from '@loadable/component';
 
 const Home = loadable(() => import('app/Home'));
 const Private = loadable(() => import('app/Private'));
-const Profile = loadable(() => import('app/Profile'));
+import Profile from 'app/Profile';
 
 export default [
   {

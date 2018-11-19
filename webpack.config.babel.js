@@ -1,4 +1,5 @@
 import path from 'path';
+import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 import LoadablePlugin from '@loadable/webpack-plugin';
 
@@ -9,38 +10,59 @@ const production = process.env.NODE_ENV === 'production';
 const development =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
-const getConfig = target => ({
-  name: target,
-  mode: development ? 'development' : 'production',
-  target,
-  entry: `./src/client/${target === 'web' ? 'index.js' : 'main-node.js'}`,
-  module: {
-    rules: [
-      {
-        test: /\.js?$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            caller: { target }
+const getConfig = target => {
+  const mainEntry = `./src/client/${
+    target === 'web' ? 'index.js' : 'main-node.js'
+  }`;
+
+  let entry = [mainEntry];
+
+  let plugins = [
+    new webpack.HotModuleReplacementPlugin(),
+    new LoadablePlugin()
+  ];
+
+  if (target === 'web') {
+    entry = [
+      'react-hot-loader/patch',
+      'webpack-hot-middleware/client?name=web',
+      mainEntry
+    ];
+  }
+
+  return {
+    name: target,
+    mode: development ? 'development' : 'production',
+    target,
+    entry,
+    module: {
+      rules: [
+        {
+          test: /\.js?$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              caller: { target }
+            }
           }
         }
-      }
-    ]
-  },
-  externals:
-    target === 'node' ? ['@loadable/component', nodeExternals()] : undefined,
-  output: {
-    path: path.join(DIST_PATH, target),
-    filename: production ? '[name]-bundle-[chunkhash:8].js' : '[name].js',
-    publicPath: `/dist/${target}/`,
-    libraryTarget: target === 'node' ? 'commonjs2' : undefined
-  },
-  resolve: {
-    modules: ['./src', 'node_modules'],
-    alias
-  },
-  plugins: [new LoadablePlugin()]
-});
+      ]
+    },
+    externals:
+      target === 'node' ? ['@loadable/component', nodeExternals()] : undefined,
+    output: {
+      path: path.join(DIST_PATH, target),
+      filename: production ? '[name]-bundle-[chunkhash:8].js' : '[name].js',
+      publicPath: `/dist/${target}/`,
+      libraryTarget: target === 'node' ? 'commonjs2' : undefined
+    },
+    resolve: {
+      modules: ['./src', 'node_modules'],
+      alias
+    },
+    plugins
+  };
+};
 
 export default [getConfig('web'), getConfig('node')];

@@ -6,7 +6,7 @@ const Home = () => (
     <Helmet>
       <title>Home</title>
     </Helmet>
-    <b>This is Home</b>
+    <b>This is Home :) or is it...? :)</b>
   </div>
 );
 

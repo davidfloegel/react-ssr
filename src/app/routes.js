@@ -3,9 +3,10 @@ import { Helmet } from 'react-helmet';
 import { Switch, Route, Link } from 'react-router-dom';
 import loadable from '@loadable/component';
 
+import Lyrics from 'app/Lyrics';
+
 const Home = loadable(() => import('app/Home'));
 const Private = loadable(() => import('app/Private'));
-import Profile from 'app/Profile';
 
 export default [
   {
@@ -14,9 +15,9 @@ export default [
     component: Home
   },
   {
-    path: '/profile',
+    path: '/lyrics',
     exact: true,
-    component: Profile
+    component: Lyrics
   },
   {
     path: '/private',

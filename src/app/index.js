@@ -8,19 +8,19 @@ import NavBar from 'app/components/Nav';
 const GlobalStyle = createGlobalStyle`
   html, body {
     background: ${({ theme }) => theme.background};
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-family: 'Lato', sans-serif;
+    font-size: ${({ theme }) => theme.fontSize};
+    padding: 50px 0;
   }
 
   * {
-    font-family: sans-serif;
+    font-family: 'Lato', sans-serif;
   }
 `;
 
 const theme = {
-  background: '#efefef'
+  background: '#f9f9f9',
+  fontSize: '20px'
 };
 
 const App = ({ serverData }) => (
@@ -38,7 +38,7 @@ const App = ({ serverData }) => (
               render={props =>
                 React.createElement(route.component, {
                   ...props,
-                  serverData: serverData[0] || null
+                  serverData: serverData ? serverData[0] : null
                 })
               }
             />

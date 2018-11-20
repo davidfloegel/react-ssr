@@ -1,9 +1,13 @@
-import React from "react";
+import React from 'react';
 
 export default ({ scriptTags, styles, helmet, markup, data }) => (
   <html>
     <head>
       {helmet.title.toComponent()}
+      <link
+        href="https://fonts.googleapis.com/css?family=Lato"
+        rel="stylesheet"
+      />
       <style dangerouslySetInnerHTML={{ __html: styles }} />
     </head>
     <body>

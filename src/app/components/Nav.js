@@ -31,7 +31,7 @@ const NavLink = styled(Link)`
 const Nav = () => (
   <NavBar>
     <NavLink to="/">Home</NavLink>
-    <NavLink to="/profile">Profile</NavLink>
+    <NavLink to="/lyrics">Remote Data</NavLink>
     <NavLink to="/private">Private</NavLink>
   </NavBar>
 );

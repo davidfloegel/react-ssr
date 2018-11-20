@@ -1,3 +1,5 @@
+import '@babel/polyfill';
+
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import path from 'path';
@@ -9,7 +11,6 @@ import { Helmet } from 'react-helmet';
 import { ChunkExtractor } from '@loadable/server';
 import chokidar from 'chokidar';
 import routes from '../app/routes';
-import App from '../app';
 import Html from './html';
 
 const app = express();
@@ -68,7 +69,8 @@ app.get('*', (req, res) => {
     return match;
   });
 
-  Promise.all(promises).then(data => {
+  Promise.all(promises).then(resData => {
+    const data = resData && resData.length ? resData[0].data : null;
     const sheet = new ServerStyleSheet();
 
     // load the stats files definining the chunks from @loadable/component
@@ -95,6 +97,8 @@ app.get('*', (req, res) => {
     const helmet = Helmet.renderStatic();
     const styles = sheet.getStyleElement();
     const scriptTags = webExtractor.getScriptElements();
+
+    console.log(helmet.title.toString());
 
     // generate stream
     const nodeStream = ReactDOMServer.renderToNodeStream(
@@ -129,7 +133,6 @@ if (isDev) {
   const watcher = chokidar.watch('.', { ignored: /[/\\]node_modules[/\\]/ });
 
   watcher.on('ready', () => {
-    console.log('watcher ready');
     Object.keys(require.cache).forEach(id => {
       if (/[/\\]server[/\\]/.test(id)) {
         logMessage(id.split(/[/\\]server[/\\]/)[1]);

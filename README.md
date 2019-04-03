@@ -1,12 +1,16 @@
-# React SSR
+# React SSR [Experimental]
 
 ## TODO
 
-- [ ] Hot Module Reloading
+- [ ] Typescript
+- [ ] BDD Tests
+- [ ] Unit Tests
+- [ ] Productionise
 
 ## Features
 
 * React 16
+* Hot Reloading
 * Webpack 4
 * Babel 7
 * Styled Components

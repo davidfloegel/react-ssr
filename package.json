@@ -43,6 +43,7 @@
     "axios": "^0.18.0",
     "babel-plugin-dynamic-import-node": "^2.2.0",
     "babel-plugin-styled-components": "^1.8.0",
+    "core-js": "2",
     "cors": "^2.8.5",
     "path": "^0.12.7",
     "react": "^16.6.0",

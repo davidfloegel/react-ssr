@@ -10,6 +10,7 @@
     "sourceMap": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "baseUrl": "./src",
     "lib": ["es5", "es6", "dom"]
   },

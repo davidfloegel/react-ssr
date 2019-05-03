@@ -23,19 +23,23 @@ const theme = {
   fontSize: '20px'
 };
 
-const App = ({ serverData }) => (
+type Props = {
+  serverData: any;
+};
+
+const App: React.SFC<Props> = ({ serverData }) => (
   <ThemeProvider theme={theme}>
     <Fragment>
       <GlobalStyle />
       <NavBar />
       <Switch>
-        {routes.map((route, index) => {
+        {routes.map((route: any, index: number) => {
           return (
             <Route
               key={index}
               path={route.path}
               exact={route.exact}
-              render={props =>
+              render={(props: any) =>
                 React.createElement(route.component, {
                   ...props,
                   serverData: serverData ? serverData[0] : null

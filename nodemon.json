@@ -1,6 +1,7 @@
 {
-  "ignore": ["./src/app", "./src/client", "./public"],
-  "execMap": {
-    "js": "babel-node"
-  }
+  "ignore": [
+    "./src/app", "./src/client", "./public", "**/*.test.ts", "node_modules", ".git"
+  ],
+  "ext": "ts",
+  "exec": "ts-node -r tsconfig-paths/register ./src/server/index.js"
 }

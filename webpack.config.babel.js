@@ -37,20 +37,28 @@ const getConfig = target => {
     entry,
     module: {
       rules: [
+        // TODO looks like babel-loader isn't needed anymore as everything is handled by typescript itself
+        // {
+        //   test: /\.(js|jsx)?$/,
+        //   exclude: /node_modules/,
+        //   use: {
+        //     loader: 'babel-loader',
+        //     options: {
+        //       caller: { target }
+        //     }
+        //   }
+        // },
         {
-          test: /\.js?$/,
+          test: /\.(js|ts|tsx)?$/,
           exclude: /node_modules/,
           use: {
-            loader: 'babel-loader',
-            options: {
-              caller: { target }
-            }
+            loader: 'ts-loader',
           }
         }
       ]
     },
     externals:
-      target === 'node' ? ['@loadable/component', nodeExternals()] : undefined,
+    target === 'node' ? ['@loadable/component', nodeExternals()] : undefined,
     output: {
       path: path.join(DIST_PATH, target),
       filename: production ? '[name]-bundle-[chunkhash:8].js' : '[name].js',
@@ -59,6 +67,7 @@ const getConfig = target => {
     },
     resolve: {
       modules: ['./src', 'node_modules'],
+      extensions: ['.ts', '.tsx', '.js', '.json'],
       alias
     },
     plugins

@@ -79,14 +79,14 @@ app.get('*', (req, res) => {
     const webExtractor = new ChunkExtractor({ statsFile: webStats });
 
     // render the app in the static router
-    const app = (
+    const routerApp = (
       <StaticRouter location={req.url} context={{}}>
         <App serverData={data} />
       </StaticRouter>
     );
 
     // get all cunks
-    const jsx = webExtractor.collectChunks(app);
+    const jsx = webExtractor.collectChunks(routerApp);
 
     // render the app to a string and collect all styled-component styles
     const renderAppToString = ReactDOMServer.renderToString(

@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import Container from 'app/components/Container';
 
-const Home = () => (
+const Home: React.SFC<any> = () => (
   <Container>
     <Helmet>
       <title>Home</title>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
-const Private = () => (
+const Private: React.SFC<any> =() => (
   <div>
     <Helmet>
       <title>Private</title>

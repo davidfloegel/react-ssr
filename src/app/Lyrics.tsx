@@ -5,7 +5,10 @@ import axios from 'axios';
 import withSSR from 'app/ssr';
 import Container from 'app/components/Container';
 
-class Profile extends Component {
+interface Props {
+  data: any;
+}
+class Profile extends Component<Props> {
   static getInitialData() {
     return axios.get(
       'https://api.lyrics.ovh/v1/Coldplay/Adventure of a Lifetime'
@@ -32,7 +35,7 @@ class Profile extends Component {
         <h1>Adventure of a Lifetime</h1>
         <h3>By Coldplay</h3>
 
-        {lyrics.split('\n').map((item, key) => (
+        {lyrics.split('\n').map((item: any, key: string) => (
           <React.Fragment key={key}>
             {item}
             <br />

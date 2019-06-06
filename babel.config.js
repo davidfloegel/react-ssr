@@ -1,4 +1,4 @@
-const loadableBabelPlugin = require('@loadable/babel-plugin');
+// const loadableBabelPlugin = require('@loadable/babel-plugin');
 const sharedConf = require('./shared.config');
 
 function isWebTarget(caller) {
@@ -28,7 +28,7 @@ module.exports = api => {
   const plugins = [
     'babel-plugin-styled-components',
     '@babel/plugin-syntax-dynamic-import',
-    loadableBabelPlugin,
+    '@loadable/babel-plugin',
     [
       'module-resolver',
       {

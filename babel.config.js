@@ -14,7 +14,6 @@ module.exports = api => {
 
   const presets = [
     '@babel/preset-react',
-    '@babel/preset-typescript',
     [
       '@babel/preset-env',
       {
@@ -23,7 +22,8 @@ module.exports = api => {
         targets: !web ? { node: 'current' } : undefined,
         modules: webpack ? false : 'commonjs'
       }
-    ]
+    ],
+    '@babel/preset-typescript',
   ];
 
   const plugins = [
@@ -34,7 +34,8 @@ module.exports = api => {
       'module-resolver',
       {
         root: ['./src'],
-        alias: sharedConf.alias
+        alias: sharedConf.alias,
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     ]
   ];

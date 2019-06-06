@@ -17,8 +17,9 @@ class Profile extends Component<Props> {
 
   render() {
     const { data } = this.props;
+    console.log('component', this.props)
 
-    console.log(data);
+    console.log('data in component', data);
 
     if (!data || !data.lyrics) {
       return <Container>Loading Lyrics...</Container>;

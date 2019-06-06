@@ -26,6 +26,7 @@ export default function SSR(Page) {
     }
 
     componentWillUnmount() {
+      console.log('unmount higherorder')
       this.ignoreLastFetch = true;
     }
 
@@ -50,12 +51,14 @@ export default function SSR(Page) {
       // Flatten out all the props.
       const { serverData, ...rest } = this.props;
 
+      console.log('ssr higher order', this.state)
+
       return (
         <Page
           {...rest}
           refetch={() => this.fetchData()}
           isLoading={this.state.isLoading}
-          {...this.state.data}
+          data={this.state.data}
         />
       );
     }

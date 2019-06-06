@@ -69,9 +69,13 @@ app.get('*', (req, res) => {
     return match;
   });
 
+  console.log('promises to fullfill', promises)
+
   Promise.all(promises).then(resData => {
     const data = resData && resData.length ? resData[0].data : null;
     const sheet = new ServerStyleSheet();
+
+    console.log('preloaded data', data)
 
     // load the stats files definining the chunks from @loadable/component
     const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
@@ -98,7 +102,7 @@ app.get('*', (req, res) => {
     const styles = sheet.getStyleElement();
     const scriptTags = webExtractor.getScriptElements();
 
-    console.log(helmet.title.toString());
+    console.log('page title', helmet.title.toString());
 
     // generate stream
     const nodeStream = ReactDOMServer.renderToNodeStream(

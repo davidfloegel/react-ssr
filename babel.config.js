@@ -27,9 +27,9 @@ module.exports = api => {
   ];
 
   const plugins = [
-    'babel-plugin-styled-components',
     '@babel/plugin-syntax-dynamic-import',
     '@loadable/babel-plugin',
+    'babel-plugin-styled-components',
     [
       'module-resolver',
       {

@@ -28,6 +28,7 @@ type Props = {
 };
 
 const App: React.SFC<Props> = ({ serverData }) => (
+  console.log('app index',serverData),
   <ThemeProvider theme={theme}>
     <Fragment>
       <GlobalStyle />
@@ -42,7 +43,7 @@ const App: React.SFC<Props> = ({ serverData }) => (
               render={(props: any) =>
                 React.createElement(route.component, {
                   ...props,
-                  serverData: serverData ? serverData[0] : null
+                  serverData: serverData || null
                 })
               }
             />

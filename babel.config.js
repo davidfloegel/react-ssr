@@ -1,4 +1,3 @@
-// const loadableBabelPlugin = require('@loadable/babel-plugin');
 const sharedConf = require('./shared.config');
 
 function isWebTarget(caller) {
@@ -15,10 +14,12 @@ module.exports = api => {
 
   const presets = [
     '@babel/preset-react',
+    '@babel/preset-typescript',
     [
       '@babel/preset-env',
       {
         useBuiltIns: web ? 'entry' : false,
+        corejs: web ? '2.0.0' : undefined,
         targets: !web ? { node: 'current' } : undefined,
         modules: webpack ? false : 'commonjs'
       }

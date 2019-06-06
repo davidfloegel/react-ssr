@@ -37,23 +37,12 @@ const getConfig = target => {
     entry,
     module: {
       rules: [
-        // TODO looks like babel-loader isn't needed anymore as everything is handled by typescript itself
-        // {
-        //   test: /\.(js|jsx)?$/,
-        //   exclude: /node_modules/,
-        //   use: {
-        //     loader: 'babel-loader',
-        //     options: {
-        //       caller: { target }
-        //     }
-        //   }
-        // },
         {
-          test: /\.(js|ts|tsx)?$/,
+          test: /\.(js|ts)(x?)?$/,
           exclude: /node_modules/,
-          use: {
-            loader: 'ts-loader',
-          }
+          use:[
+            { loader: 'babel-loader', options: { caller: { target } } },
+          ]
         }
       ]
     },
@@ -67,7 +56,7 @@ const getConfig = target => {
     },
     resolve: {
       modules: ['./src', 'node_modules'],
-      extensions: ['.ts', '.tsx', '.js', '.json'],
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
       alias
     },
     plugins

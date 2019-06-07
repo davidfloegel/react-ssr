@@ -1,42 +1,28 @@
 import React, { Fragment } from 'react';
 import { Helmet } from 'react-helmet';
 import { Switch, Route, Link } from 'react-router-dom';
-import { createGlobalStyle, ThemeProvider } from 'app/lib/styledComponents';
+import { createGlobalStyle, ThemeProvider } from 'lib/styledComponents';
+import { Route as IRoute } from 'typings/routing';
 import routes from 'app/routes';
-import NavBar from 'app/components/Nav';
+import NavBar from 'components/Nav';
+import PrivateRoute from 'components/PrivateRoute';
 
-const GlobalStyle = createGlobalStyle`
-  html, body {
-    background: ${({ theme }) => theme.background};
-    font-family: 'Lato', sans-serif;
-    font-size: ${({ theme }) => theme.fontSize};
-    padding: 50px 0;
-  }
+import theme, { GlobalStyle } from 'uikit/theme';
 
-  * {
-    font-family: 'Lato', sans-serif;
-  }
-`;
-
-const theme = {
-  background: '#f9f9f9',
-  fontSize: '20px'
-};
-
-type Props = {
+type AppProps = {
   serverData: any;
 };
 
-const App: React.SFC<Props> = ({ serverData }) => (
-  console.log('app index',serverData),
+const App: React.SFC<AppProps> = ({ serverData }) => (
   <ThemeProvider theme={theme}>
     <Fragment>
       <GlobalStyle />
       <NavBar />
       <Switch>
-        {routes.map((route: any, index: number) => {
+        {routes.map((route: IRoute, index: number) => {
+          const RouteComp = route.private ? PrivateRoute : Route;
           return (
-            <Route
+            <RouteComp
               key={index}
               path={route.path}
               exact={route.exact}

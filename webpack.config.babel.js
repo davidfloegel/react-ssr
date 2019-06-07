@@ -22,6 +22,15 @@ const getConfig = target => {
     new LoadablePlugin()
   ];
 
+    plugins = [
+      new webpack.DefinePlugin({
+        'process.env': {
+        WEB: target === 'web' ? JSON.stringify(true) : JSON.stringify(false),
+        }
+      }),
+      ...plugins
+    ]
+
   if (target === 'web') {
     entry = [
       'react-hot-loader/patch',

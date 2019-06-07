@@ -12,8 +12,6 @@ const data = window._INITIAL_DATA_;
 
 delete window._INITIAL_DATA_;
 
-console.log('client', data)
-
 const renderApp = Component =>
   hydrate(
     <AppContainer>

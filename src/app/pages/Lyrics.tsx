@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Helmet } from 'react-helmet';
 import axios from 'axios';
 
-import withSSR from 'app/ssr';
-import Container from 'app/components/Container';
+import Prerender from 'components/prerender';
+import Container from 'components/Container';
+import SEO from 'components/SEO';
 
 interface Props {
   data: any;
+  isLoading: boolean;
 }
 class Profile extends Component<Props> {
   static getInitialData() {
@@ -17,9 +18,6 @@ class Profile extends Component<Props> {
 
   render() {
     const { data } = this.props;
-    console.log('component', this.props)
-
-    console.log('data in component', data);
 
     if (!data || !data.lyrics) {
       return <Container>Loading Lyrics...</Container>;
@@ -29,9 +27,7 @@ class Profile extends Component<Props> {
 
     return (
       <Container>
-        <Helmet>
-          <title>Coldplay - Adventure of a Lifetime</title>
-        </Helmet>
+        <SEO title="Coldplay - Adventure of a Lifetime" />
 
         <h1>Adventure of a Lifetime</h1>
         <h3>By Coldplay</h3>
@@ -47,4 +43,4 @@ class Profile extends Component<Props> {
   }
 }
 
-export default withSSR(Profile);
+export default Prerender(Profile);

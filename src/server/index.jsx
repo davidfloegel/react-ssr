@@ -10,17 +10,18 @@ import { ServerStyleSheet } from 'styled-components';
 import { Helmet } from 'react-helmet';
 import { ChunkExtractor } from '@loadable/server';
 import chokidar from 'chokidar';
-import routes from '../app/routes';
+import routes from 'app/routes';
+import logger from 'app/util/logger';
+import config from 'app/config';
 import Html from './html';
 
 const app = express();
-const port = 3030;
-const isDev = process.env.NODE_ENV !== 'production';
+const port = config.port;
 
 app.use(express.static(path.join(__dirname, '../../public')));
 
 let compiler = null;
-if (isDev) {
+if (config.isDev) {
   const { default: webpackConfig } = require('../../webpack.config.babel');
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpack = require('webpack');
@@ -38,12 +39,7 @@ if (isDev) {
     })
   );
 
-  app.use(
-    require('webpack-hot-middleware')(compiler, {
-      // eslint-disable-next-line
-      log: console.log
-    })
-  );
+  app.use(require('webpack-hot-middleware')(compiler));
 }
 
 const nodeStats = path.resolve(
@@ -69,13 +65,9 @@ app.get('*', (req, res) => {
     return match;
   });
 
-  console.log('promises to fullfill', promises)
-
   Promise.all(promises).then(resData => {
     const data = resData && resData.length ? resData[0].data : null;
     const sheet = new ServerStyleSheet();
-
-    console.log('preloaded data', data)
 
     // load the stats files definining the chunks from @loadable/component
     const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
@@ -102,8 +94,6 @@ app.get('*', (req, res) => {
     const styles = sheet.getStyleElement();
     const scriptTags = webExtractor.getScriptElements();
 
-    console.log('page title', helmet.title.toString());
-
     // generate stream
     const nodeStream = ReactDOMServer.renderToNodeStream(
       <Html
@@ -125,10 +115,10 @@ app.get('*', (req, res) => {
   });
 });
 
-if (isDev) {
+if (config.isDev) {
   const logMessage = id => {
     // eslint-disable-next-line
-    console.log(`Clearing cache on: /server/${id}`);
+    logger.info(`Clearing cache on: /server/${id}`);
   };
 
   // Do "hot-reloading" of express stuff on the server
@@ -149,7 +139,7 @@ if (isDev) {
   // Throw away the cached client modules and let them be re-required next time
   compiler.plugin('done', () => {
     // eslint-disable-next-line
-    console.log('Clearing /client/ module cache from server');
+    logMessage('Clearing /client/ module cache from server');
     Object.keys(require.cache).forEach(id => {
       if (/[/\\]client[/\\]/.test(id)) {
         logMessage(id.split(/[/\\]client[/\\]/)[1]);
@@ -162,4 +152,4 @@ if (isDev) {
   });
 }
 
-app.listen(port, () => console.log(`App listening on port ${port}!`));
+app.listen(port, () => logger.info(`App listening on port ${port}!`));

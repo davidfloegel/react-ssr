@@ -1,12 +1,10 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
-import Container from 'app/components/Container';
+import Container from 'components/Container';
+import SEO from 'components/SEO';
 
 const Home: React.SFC<any> = () => (
   <Container>
-    <Helmet>
-      <title>Home</title>
-    </Helmet>
+    <SEO title="Home" />
 
     <h1>Universal Home</h1>
     <p>

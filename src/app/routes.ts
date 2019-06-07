@@ -1,14 +1,18 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
-import { Switch, Route, Link } from 'react-router-dom';
 import loadable from '@loadable/component';
 
-import Lyrics from 'app/Lyrics';
+import { Route } from 'typings/routing';
 
-const Home = loadable(() => import('app/Home'));
-const Private = loadable(() => import('app/Private'));
+// importing routes using loadable. This will lazy load them and only include
+// when the route has been requested
+const Home = loadable(() => import('pages/Home'));
+const Private = loadable(() => import('pages/Private'));
 
-export default [
+// if you want your route to pre-fetch data using the Prerender component
+// then you will have to import it statically.
+import Lyrics from 'pages/Lyrics';
+
+const routes: Route[] = [
   {
     path: '/',
     exact: true,
@@ -22,6 +26,9 @@ export default [
   {
     path: '/private',
     exact: true,
-    component: Private
+    component: Private,
+    private: true
   }
 ];
+
+export default routes;

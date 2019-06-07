@@ -1,4 +1,5 @@
 import 'core-js';
+import 'regenerator-runtime/runtime';
 
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';

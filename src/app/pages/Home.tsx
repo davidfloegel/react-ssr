@@ -6,7 +6,7 @@ const Home: React.SFC<any> = () => (
   <Container>
     <SEO title="Home" />
 
-    <h1>Universal Home</h1>
+    <h1>Universal React</h1>
     <p>
       Welcome to this universal react boilerplate.
       <br />

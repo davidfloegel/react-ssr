@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
 import axios from 'axios';
+import React, { Component } from 'react';
 
 import Prerender from 'components/prerender';
 import SEO from 'components/SEO';
 import Container from 'uikit/Container';
 
-interface Props {
+interface IProps {
   data: any;
   isLoading: boolean;
 }
-class Profile extends Component<Props> {
-  static getInitialData() {
+class Profile extends Component<IProps> {
+  public static getInitialData() {
     return axios.get(
       'https://api.lyrics.ovh/v1/Coldplay/Adventure of a Lifetime'
     );
   }
 
-  render() {
+  public render() {
     const { data } = this.props;
 
     if (!data || !data.lyrics) {

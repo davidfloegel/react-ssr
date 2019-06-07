@@ -1,10 +1,8 @@
-import '@babel/polyfill';
-
+import { loadableReady } from '@loadable/component';
 import React from 'react';
 import { hydrate } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import { BrowserRouter } from 'react-router-dom';
-import { loadableReady } from '@loadable/component';
 
 import App from '../app';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface HTMLProps {
+interface IHTMLProps {
   scriptTags: any;
   styles: any;
   helmet: any;
@@ -8,7 +8,7 @@ interface HTMLProps {
   data: any;
 }
 
-const HTML: React.SFC<HTMLProps> = ({
+const HTML: React.SFC<IHTMLProps> = ({
   scriptTags,
   styles,
   helmet,

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Container from 'uikit/Container';
 import SEO from 'components/SEO';
+import Container from 'uikit/Container';
 
 const Private = () => (
   <Container>

@@ -1,19 +1,19 @@
 import 'core-js';
 import 'regenerator-runtime/runtime';
 
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import path from 'path';
-import express from 'express';
-import cors from 'cors';
-import { StaticRouter, matchPath } from 'react-router-dom';
-import { ServerStyleSheet } from 'styled-components';
-import { Helmet } from 'react-helmet';
 import { ChunkExtractor } from '@loadable/server';
-import chokidar from 'chokidar';
+import config from 'app/config';
 import routes from 'app/routes';
 import logger from 'app/util/logger';
-import config from 'app/config';
+import chokidar from 'chokidar';
+import cors from 'cors';
+import express from 'express';
+import path from 'path';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import { Helmet } from 'react-helmet';
+import { matchPath, StaticRouter } from 'react-router-dom';
+import { ServerStyleSheet } from 'styled-components';
 import Html from './html';
 
 const app = express();
@@ -55,7 +55,7 @@ const webStats = path.resolve(
 
 app.get('*', (req, res) => {
   // check if a current route has a request that needs to be waited for
-  const promises: Promise<any>[] = [];
+  const promises: Array<Promise<any>> = [];
   routes.some(route => {
     const match = matchPath(req.path, route);
 

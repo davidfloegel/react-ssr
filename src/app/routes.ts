@@ -1,5 +1,5 @@
-import React from 'react';
 import loadable from '@loadable/component';
+import React from 'react';
 
 // importing routes using loadable. This will lazy load them and only include
 // when the route has been requested

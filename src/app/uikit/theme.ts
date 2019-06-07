@@ -1,6 +1,6 @@
-import { Theme } from 'typings/theme';
+import { ITheme } from 'typings/theme';
 
-const theme: Theme = {
+const theme: ITheme = {
   background: '#f9f9f9',
   fontSize: '20px'
 };

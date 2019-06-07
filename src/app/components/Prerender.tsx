@@ -1,28 +1,27 @@
 import React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
-interface Props extends RouteComponentProps {
+interface IProps extends RouteComponentProps {
   serverData?: any;
 }
 
-interface State {
+interface IState {
   data?: any;
   isLoading: boolean;
 }
 
-export default function PrerenderHOC<T,>(Page: any) {
-  class Prerender extends React.Component<Props, State> {
-    private ignoreLastFetch: boolean;
+export default function PrerenderHOC<T>(Page: any) {
+  class Prerender extends React.Component<IProps, IState> {
+    public static displayName: string;
 
-    static displayName: string;
-
-    static getInitialData(match: any) {
+    public static getInitialData(match: any) {
       return Page.getInitialData
         ? Page.getInitialData(match)
         : Promise.resolve(null);
     }
+    private ignoreLastFetch: boolean;
 
-    constructor(props: Props) {
+    constructor(props: IProps) {
       super(props);
 
       this.state = {
@@ -32,17 +31,17 @@ export default function PrerenderHOC<T,>(Page: any) {
       this.ignoreLastFetch = false;
     }
 
-    componentDidMount() {
+    public componentDidMount() {
       if (!this.state.data) {
         this.fetchData();
       }
     }
 
-    componentWillUnmount() {
+    public componentWillUnmount() {
       this.ignoreLastFetch = true;
     }
 
-    async fetchData() {
+    public async fetchData() {
       if (!this.ignoreLastFetch) {
         this.setState({ isLoading: true });
 
@@ -57,7 +56,7 @@ export default function PrerenderHOC<T,>(Page: any) {
       }
     }
 
-    render() {
+    public render() {
       // Flatten out all the props.
       const { serverData, ...rest } = this.props;
 

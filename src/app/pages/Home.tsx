@@ -1,6 +1,6 @@
+import SEO from 'components/SEO';
 import React from 'react';
 import Container from 'uikit/Container';
-import SEO from 'components/SEO';
 
 const Home: React.SFC<any> = () => (
   <Container>

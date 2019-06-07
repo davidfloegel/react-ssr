@@ -1,18 +1,18 @@
-import React, { Fragment } from 'react';
-import { Helmet } from 'react-helmet';
-import { Switch, Route, Link } from 'react-router-dom';
-import { createGlobalStyle, ThemeProvider } from 'lib/styledComponents';
 import routes, { IRoute } from 'app/routes';
 import PrivateRoute from 'components/PrivateRoute';
+import { createGlobalStyle, ThemeProvider } from 'lib/styledComponents';
+import React, { Fragment } from 'react';
+import { Helmet } from 'react-helmet';
+import { Link, Route, Switch } from 'react-router-dom';
 
 import NavBar from 'uikit/Nav';
 import theme, { GlobalStyle } from 'uikit/theme';
 
-export interface AppProps {
+export interface IAppProps {
   serverData: any;
 };
 
-const App: React.SFC<AppProps> = ({ serverData }) => (
+const App: React.SFC<IAppProps> = ({ serverData }) => (
   <ThemeProvider theme={theme}>
     <Fragment>
       <GlobalStyle />

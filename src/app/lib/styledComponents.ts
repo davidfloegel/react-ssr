@@ -1,7 +1,6 @@
-import * as styledComponents from 'styled-components'
-import { ThemedStyledComponentsModule } from 'styled-components'
+import * as styledComponents from 'styled-components';
 
-import { Theme } from 'app/typings/theme'
+import { ITheme } from 'app/typings/theme';
 
 const {
   default: styled,
@@ -10,14 +9,8 @@ const {
   keyframes,
   ThemeProvider,
   withTheme
-} = styledComponents as ThemedStyledComponentsModule<Theme>
+} = styledComponents as styledComponents.ThemedStyledComponentsModule<ITheme>;
 
-export {
-  css,
-  createGlobalStyle,
-  keyframes,
-  ThemeProvider,
-  withTheme
-}
+export { css, createGlobalStyle, keyframes, ThemeProvider, withTheme };
 
-export default styled
+export default styled;

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Route, Redirect, RouteComponentProps } from 'react-router-dom';
+import { Redirect, Route, RouteComponentProps } from 'react-router-dom';
 
-interface Props extends RouteComponentProps {
+interface IProps extends RouteComponentProps {
   render: any;
 }
 
-class PrivateRoute extends Component<Props> {
-  render() {
+class PrivateRoute extends Component<IProps> {
+  public render() {
     const { location, render, ...rest } = this.props;
 
     // TODO this is where you do your check whether a user is logged in or not.

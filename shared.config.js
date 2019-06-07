@@ -1,6 +1,6 @@
 const path = require('path');
 
-// export alias definition used by both webpack and babel.config.js
+// export alias definition used by both webpack.config.babel.js, babel.config.js and tslint.json
 const alias = {
   app: path.join(__dirname, 'src/app'),
   pages: path.join(__dirname, 'src/app/pages'),

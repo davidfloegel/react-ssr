@@ -2,7 +2,7 @@
 
 const env = process.env.NODE_ENV || 'development';
 
-interface Config {
+interface IConfig {
   appEnv: string;
   port: number;
 
@@ -11,7 +11,7 @@ interface Config {
   isProd: boolean;
 }
 
-const config: Config = {
+const config: IConfig = {
   appEnv: env,
   port: Number(process.env.PORT || 3030),
 

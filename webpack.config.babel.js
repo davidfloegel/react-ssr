@@ -12,7 +12,7 @@ const development =
 
 const getConfig = target => {
   const mainEntry = `./src/client/${
-    target === 'web' ? 'index.js' : 'main-node.js'
+    target === 'web' ? 'index.tsx' : 'main-node.ts'
   }`;
 
   let entry = [mainEntry];
@@ -22,14 +22,14 @@ const getConfig = target => {
     new LoadablePlugin()
   ];
 
-    plugins = [
-      new webpack.DefinePlugin({
-        'process.env': {
-        WEB: target === 'web' ? JSON.stringify(true) : JSON.stringify(false),
-        }
-      }),
-      ...plugins
-    ]
+  plugins = [
+    new webpack.DefinePlugin({
+      'process.env': {
+        WEB: target === 'web' ? JSON.stringify(true) : JSON.stringify(false)
+      }
+    }),
+    ...plugins
+  ];
 
   if (target === 'web') {
     entry = [
@@ -49,14 +49,12 @@ const getConfig = target => {
         {
           test: /\.(js|ts)(x?)?$/,
           exclude: /node_modules/,
-          use:[
-            { loader: 'babel-loader', options: { caller: { target } } },
-          ]
+          use: [{ loader: 'babel-loader', options: { caller: { target } } }]
         }
       ]
     },
     externals:
-    target === 'node' ? ['@loadable/component', nodeExternals()] : undefined,
+      target === 'node' ? ['@loadable/component', nodeExternals()] : undefined,
     output: {
       path: path.join(DIST_PATH, target),
       filename: production ? '[name]-bundle-[chunkhash:8].js' : '[name].js',

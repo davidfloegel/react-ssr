@@ -8,7 +8,6 @@
     "jsx": "react",
     "outDir": "dist",
     "sourceMap": true,
-    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "baseUrl": "./src",
@@ -26,8 +25,6 @@
     }
   },
   "include": [
-    "src/**/*.js",
-    "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx"
   ],

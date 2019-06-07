@@ -57,7 +57,7 @@ const getConfig = target => {
       target === 'node' ? ['@loadable/component', nodeExternals()] : undefined,
     output: {
       path: path.join(DIST_PATH, target),
-      filename: production ? '[name]-bundle-[chunkhash:8].js' : '[name].js',
+      filename: production ? '[name]-bundle-[hash:8].js' : '[name].js',
       publicPath: `/dist/${target}/`,
       libraryTarget: target === 'node' ? 'commonjs2' : undefined
     },

@@ -1,6 +1,20 @@
 import React from 'react';
 
-export default ({ scriptTags, styles, helmet, markup, data }) => (
+interface IHTMLProps {
+  scriptTags: any;
+  styles: any;
+  helmet: any;
+  markup: any;
+  data: any;
+}
+
+const HTML: React.SFC<IHTMLProps> = ({
+  scriptTags,
+  styles,
+  helmet,
+  markup,
+  data
+}) => (
   <html>
     <head>
       {helmet.title.toComponent()}
@@ -23,3 +37,5 @@ export default ({ scriptTags, styles, helmet, markup, data }) => (
     </body>
   </html>
 );
+
+export default HTML;

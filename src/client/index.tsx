@@ -1,18 +1,16 @@
-import '@babel/polyfill';
-
+import { loadableReady } from '@loadable/component';
 import React from 'react';
 import { hydrate } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import { BrowserRouter } from 'react-router-dom';
-import { loadableReady } from '@loadable/component';
 
 import App from '../app';
 
-const data = window._INITIAL_DATA_;
+const data = (window as any)._INITIAL_DATA_;
 
-delete window._INITIAL_DATA_;
+delete (window as any)._INITIAL_DATA_;
 
-const renderApp = Component =>
+const renderApp = (Component: typeof App) =>
   hydrate(
     <AppContainer>
       <BrowserRouter>

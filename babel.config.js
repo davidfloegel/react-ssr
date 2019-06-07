@@ -1,4 +1,3 @@
-const loadableBabelPlugin = require('@loadable/babel-plugin');
 const sharedConf = require('./shared.config');
 
 function isWebTarget(caller) {
@@ -19,21 +18,24 @@ module.exports = api => {
       '@babel/preset-env',
       {
         useBuiltIns: web ? 'entry' : false,
+        corejs: web ? '2.0.0' : undefined,
         targets: !web ? { node: 'current' } : undefined,
         modules: webpack ? false : 'commonjs'
       }
-    ]
+    ],
+    '@babel/preset-typescript',
   ];
 
   const plugins = [
-    'babel-plugin-styled-components',
     '@babel/plugin-syntax-dynamic-import',
-    loadableBabelPlugin,
+    '@loadable/babel-plugin',
+    'babel-plugin-styled-components',
     [
       'module-resolver',
       {
         root: ['./src'],
-        alias: sharedConf.alias
+        alias: sharedConf.alias,
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     ]
   ];

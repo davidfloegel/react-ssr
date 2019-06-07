@@ -1,14 +1,12 @@
+import SEO from 'components/SEO';
 import React from 'react';
-import { Helmet } from 'react-helmet';
-import Container from 'app/components/Container';
+import Container from 'uikit/Container';
 
-const Home = () => (
+const Home: React.SFC<any> = () => (
   <Container>
-    <Helmet>
-      <title>Home</title>
-    </Helmet>
+    <SEO title="Home" />
 
-    <h1>Universal Home</h1>
+    <h1>Universal React</h1>
     <p>
       Welcome to this universal react boilerplate.
       <br />

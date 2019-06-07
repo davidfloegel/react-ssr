@@ -1,6 +1,7 @@
 {
-  "ignore": ["./src/app", "./src/client", "./public"],
-  "execMap": {
-    "js": "babel-node"
-  }
+  "ignore": [
+    "./src/app", "./src/client", "./public", "**/*.test.ts", "node_modules", ".git"
+  ],
+  "ext": "js,jsx,ts,tsx",
+  "exec": "babel-node --extensions '.js,.jsx,.ts,.tsx' ./src/server/index.tsx"
 }

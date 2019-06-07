@@ -12,7 +12,7 @@ const development =
 
 const getConfig = target => {
   const mainEntry = `./src/client/${
-    target === 'web' ? 'index.js' : 'main-node.js'
+    target === 'web' ? 'index.tsx' : 'main-node.ts'
   }`;
 
   let entry = [mainEntry];
@@ -20,6 +20,15 @@ const getConfig = target => {
   let plugins = [
     new webpack.HotModuleReplacementPlugin(),
     new LoadablePlugin()
+  ];
+
+  plugins = [
+    new webpack.DefinePlugin({
+      'process.env': {
+        WEB: target === 'web' ? JSON.stringify(true) : JSON.stringify(false)
+      }
+    }),
+    ...plugins
   ];
 
   if (target === 'web') {
@@ -38,14 +47,9 @@ const getConfig = target => {
     module: {
       rules: [
         {
-          test: /\.js?$/,
+          test: /\.(js|ts)(x?)?$/,
           exclude: /node_modules/,
-          use: {
-            loader: 'babel-loader',
-            options: {
-              caller: { target }
-            }
-          }
+          use: [{ loader: 'babel-loader', options: { caller: { target } } }]
         }
       ]
     },
@@ -59,6 +63,7 @@ const getConfig = target => {
     },
     resolve: {
       modules: ['./src', 'node_modules'],
+      extensions: ['.ts', '.tsx', '.js', '.jsx'],
       alias
     },
     plugins

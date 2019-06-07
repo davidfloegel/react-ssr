@@ -1,26 +1,28 @@
-import '@babel/polyfill';
+import 'core-js';
+import 'regenerator-runtime/runtime';
 
+import { ChunkExtractor } from '@loadable/server';
+import config from 'app/config';
+import routes from 'app/routes';
+import logger from 'app/util/logger';
+import chokidar from 'chokidar';
+import cors from 'cors';
+import express from 'express';
+import path from 'path';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import path from 'path';
-import express from 'express';
-import cors from 'cors';
-import { StaticRouter, matchPath } from 'react-router-dom';
-import { ServerStyleSheet } from 'styled-components';
 import { Helmet } from 'react-helmet';
-import { ChunkExtractor } from '@loadable/server';
-import chokidar from 'chokidar';
-import routes from '../app/routes';
+import { matchPath, StaticRouter } from 'react-router-dom';
+import { ServerStyleSheet } from 'styled-components';
 import Html from './html';
 
 const app = express();
-const port = 3030;
-const isDev = process.env.NODE_ENV !== 'production';
+const port = config.port;
 
 app.use(express.static(path.join(__dirname, '../../public')));
 
 let compiler = null;
-if (isDev) {
+if (config.isDev) {
   const { default: webpackConfig } = require('../../webpack.config.babel');
   const webpackDevMiddleware = require('webpack-dev-middleware');
   const webpack = require('webpack');
@@ -32,18 +34,13 @@ if (isDev) {
       // logLevel: 'silent',
       noInfo: true,
       publicPath: '/dist/web',
-      writeToDisk(filePath) {
+      writeToDisk(filePath: string) {
         return /dist\/node\//.test(filePath) || /loadable-stats/.test(filePath);
       }
     })
   );
 
-  app.use(
-    require('webpack-hot-middleware')(compiler, {
-      // eslint-disable-next-line
-      log: console.log
-    })
-  );
+  app.use(require('webpack-hot-middleware')(compiler));
 }
 
 const nodeStats = path.resolve(
@@ -58,7 +55,7 @@ const webStats = path.resolve(
 
 app.get('*', (req, res) => {
   // check if a current route has a request that needs to be waited for
-  const promises = [];
+  const promises: Array<Promise<any>> = [];
   routes.some(route => {
     const match = matchPath(req.path, route);
 
@@ -75,18 +72,18 @@ app.get('*', (req, res) => {
 
     // load the stats files definining the chunks from @loadable/component
     const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
-    const { default: App } = nodeExtractor.requireEntrypoint();
+    const { default: App }: any = nodeExtractor.requireEntrypoint();
     const webExtractor = new ChunkExtractor({ statsFile: webStats });
 
     // render the app in the static router
-    const app = (
+    const routerApp = (
       <StaticRouter location={req.url} context={{}}>
         <App serverData={data} />
       </StaticRouter>
     );
 
     // get all cunks
-    const jsx = webExtractor.collectChunks(app);
+    const jsx = webExtractor.collectChunks(routerApp);
 
     // render the app to a string and collect all styled-component styles
     const renderAppToString = ReactDOMServer.renderToString(
@@ -97,8 +94,6 @@ app.get('*', (req, res) => {
     const helmet = Helmet.renderStatic();
     const styles = sheet.getStyleElement();
     const scriptTags = webExtractor.getScriptElements();
-
-    console.log(helmet.title.toString());
 
     // generate stream
     const nodeStream = ReactDOMServer.renderToNodeStream(
@@ -121,10 +116,10 @@ app.get('*', (req, res) => {
   });
 });
 
-if (isDev) {
-  const logMessage = id => {
+if (config.isDev) {
+  const logMessage = (id: string) => {
     // eslint-disable-next-line
-    console.log(`Clearing cache on: /server/${id}`);
+    logger.info(`Clearing cache on: /server/${id}`);
   };
 
   // Do "hot-reloading" of express stuff on the server
@@ -145,7 +140,7 @@ if (isDev) {
   // Throw away the cached client modules and let them be re-required next time
   compiler.plugin('done', () => {
     // eslint-disable-next-line
-    console.log('Clearing /client/ module cache from server');
+    logMessage('Clearing /client/ module cache from server');
     Object.keys(require.cache).forEach(id => {
       if (/[/\\]client[/\\]/.test(id)) {
         logMessage(id.split(/[/\\]client[/\\]/)[1]);
@@ -158,4 +153,4 @@ if (isDev) {
   });
 }
 
-app.listen(port, () => console.log(`App listening on port ${port}!`));
+app.listen(port, () => logger.info(`App listening on port ${port}!`));

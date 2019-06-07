@@ -1,21 +1,23 @@
-import React, { Component } from 'react';
-import { Helmet } from 'react-helmet';
 import axios from 'axios';
+import React, { Component } from 'react';
 
-import withSSR from 'app/ssr';
-import Container from 'app/components/Container';
+import Prerender from 'components/prerender';
+import SEO from 'components/SEO';
+import Container from 'uikit/Container';
 
-class Profile extends Component {
-  static getInitialData() {
+interface IProps {
+  data: any;
+  isLoading: boolean;
+}
+class Profile extends Component<IProps> {
+  public static getInitialData() {
     return axios.get(
       'https://api.lyrics.ovh/v1/Coldplay/Adventure of a Lifetime'
     );
   }
 
-  render() {
+  public render() {
     const { data } = this.props;
-
-    console.log(data);
 
     if (!data || !data.lyrics) {
       return <Container>Loading Lyrics...</Container>;
@@ -25,14 +27,12 @@ class Profile extends Component {
 
     return (
       <Container>
-        <Helmet>
-          <title>Coldplay - Adventure of a Lifetime</title>
-        </Helmet>
+        <SEO title="Coldplay - Adventure of a Lifetime" />
 
         <h1>Adventure of a Lifetime</h1>
         <h3>By Coldplay</h3>
 
-        {lyrics.split('\n').map((item, key) => (
+        {lyrics.split('\n').map((item: any, key: string) => (
           <React.Fragment key={key}>
             {item}
             <br />
@@ -43,4 +43,4 @@ class Profile extends Component {
   }
 }
 
-export default withSSR(Profile);
+export default Prerender(Profile);

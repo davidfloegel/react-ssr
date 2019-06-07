@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "noImplicitAny": true,
+    "strict": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "jsx": "react",
@@ -11,7 +12,18 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "baseUrl": "./src",
-    "lib": ["es5", "es6", "dom"]
+    "lib": ["es5", "es6", "dom"],
+    "pretty": true,
+    "skipLibCheck": true,
+    "paths": {
+      "app/*": ["./app/*"],
+      "pages/*": ["./app/pages/*"],
+      "components/*": ["./app/components/*"],
+      "lib/*": ["./app/lib/*"],
+      "typings/*": ["./app/typings/*"],
+      "uikit/*": ["./app/uikit/*"],
+      "util/*": ["./app/util/*"]
+    }
   },
   "include": [
     "src/**/*.js",

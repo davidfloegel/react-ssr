@@ -9,6 +9,7 @@
     "build:webpack": "webpack",
     "build:lib": "babel -d lib src",
     "serve": "NODE_ENV=production node lib/server/index.js",
+    "type-check": "tsc --noEmit",
     "test": "echo \"No test specified\" && exit 0"
   },
   "keywords": [],

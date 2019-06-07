@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import Prerender from 'components/prerender';
-import Container from 'components/Container';
 import SEO from 'components/SEO';
+import Container from 'uikit/Container';
 
 interface Props {
   data: any;

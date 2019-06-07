@@ -33,7 +33,7 @@ if (config.isDev) {
       // logLevel: 'silent',
       noInfo: true,
       publicPath: '/dist/web',
-      writeToDisk(filePath) {
+      writeToDisk(filePath: string) {
         return /dist\/node\//.test(filePath) || /loadable-stats/.test(filePath);
       }
     })
@@ -54,7 +54,7 @@ const webStats = path.resolve(
 
 app.get('*', (req, res) => {
   // check if a current route has a request that needs to be waited for
-  const promises = [];
+  const promises: Promise<any>[] = [];
   routes.some(route => {
     const match = matchPath(req.path, route);
 
@@ -71,7 +71,7 @@ app.get('*', (req, res) => {
 
     // load the stats files definining the chunks from @loadable/component
     const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
-    const { default: App } = nodeExtractor.requireEntrypoint();
+    const { default: App }: any = nodeExtractor.requireEntrypoint();
     const webExtractor = new ChunkExtractor({ statsFile: webStats });
 
     // render the app in the static router
@@ -116,7 +116,7 @@ app.get('*', (req, res) => {
 });
 
 if (config.isDev) {
-  const logMessage = id => {
+  const logMessage = (id: string) => {
     // eslint-disable-next-line
     logger.info(`Clearing cache on: /server/${id}`);
   };

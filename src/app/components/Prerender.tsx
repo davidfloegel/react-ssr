@@ -10,8 +10,8 @@ interface State {
   isLoading: boolean;
 }
 
-export default function SSR<T,>(Page: any) {
-  class SSR extends React.Component<Props, State> {
+export default function PrerenderHOC<T,>(Page: any) {
+  class Prerender extends React.Component<Props, State> {
     private ignoreLastFetch: boolean;
 
     static displayName: string;
@@ -47,7 +47,7 @@ export default function SSR<T,>(Page: any) {
         this.setState({ isLoading: true });
 
         try {
-          const data = await this.constructor.getInitialData({
+          const data = await Prerender.getInitialData({
             match: this.props.match
           });
           this.setState({ data: data.data, isLoading: false });
@@ -82,11 +82,10 @@ export default function SSR<T,>(Page: any) {
     }
   }
 
-  SSR.displayName = `SSR(${getDisplayName(Page)})`;
-  return SSR;
+  Prerender.displayName = `Prerender(${getDisplayName(Page)})`;
+  return Prerender;
 }
 
 function getDisplayName(WrappedComponent: any) {
   return WrappedComponent.displayName || WrappedComponent.name || 'Component';
 }
-

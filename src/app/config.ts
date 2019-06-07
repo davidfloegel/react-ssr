@@ -1,10 +1,19 @@
-import Config from 'typings/config';
+// import { Config } from 'typings/config';
 
 const env = process.env.NODE_ENV || 'development';
 
+interface Config {
+  appEnv: string;
+  port: number;
+
+  isDev: boolean;
+  isStaging: boolean;
+  isProd: boolean;
+}
+
 const config: Config = {
   appEnv: env,
-  port: process.env.PORT || 3030,
+  port: Number(process.env.PORT || 3030),
 
   // environments
   isDev: env === 'development',

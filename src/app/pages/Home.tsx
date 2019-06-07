@@ -1,5 +1,5 @@
 import React from 'react';
-import Container from 'components/Container';
+import Container from 'uikit/Container';
 import SEO from 'components/SEO';
 
 const Home: React.SFC<any> = () => (

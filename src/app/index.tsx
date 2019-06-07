@@ -2,14 +2,13 @@ import React, { Fragment } from 'react';
 import { Helmet } from 'react-helmet';
 import { Switch, Route, Link } from 'react-router-dom';
 import { createGlobalStyle, ThemeProvider } from 'lib/styledComponents';
-import { Route as IRoute } from 'typings/routing';
-import routes from 'app/routes';
-import NavBar from 'components/Nav';
+import routes, { IRoute } from 'app/routes';
 import PrivateRoute from 'components/PrivateRoute';
 
+import NavBar from 'uikit/Nav';
 import theme, { GlobalStyle } from 'uikit/theme';
 
-type AppProps = {
+export interface AppProps {
   serverData: any;
 };
 

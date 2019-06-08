@@ -35,7 +35,7 @@ if (config.isDev) {
 
   app.use(
     webpackDevMiddleware(compiler, {
-      // logLevel: 'silent',
+      logLevel: 'silent',
       noInfo: true,
       publicPath: '/dist/web',
       writeToDisk(filePath: string) {

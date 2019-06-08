@@ -16,6 +16,7 @@ const Home: React.SFC<any> = () => (
 
     <ul>
       <li>Server Side Rendered</li>
+      <li>Typescript</li>
       <li>Babel 7</li>
       <li>Webpack 4</li>
       <li>React 16</li>

@@ -19,7 +19,11 @@ import Html from './html';
 const app = express();
 const port = config.port;
 
-app.use(express.static(path.join(__dirname, '../../public')));
+if (config.isDev) {
+  app.use(express.static(path.join(__dirname, '../../public')));
+} else {
+  app.use(express.static(path.join(__dirname, '../../')));
+}
 
 let compiler = null;
 if (config.isDev) {
@@ -43,15 +47,11 @@ if (config.isDev) {
   app.use(require('webpack-hot-middleware')(compiler));
 }
 
-const nodeStats = path.resolve(
-  __dirname,
-  '../../public/dist/node/loadable-stats.json'
-);
+const statsPath = (env: string) =>
+  `../../${config.isDev ? 'public/' : ''}/dist/${env}/loadable-stats.json`;
+const nodeStats = path.resolve(__dirname, statsPath('node'));
 
-const webStats = path.resolve(
-  __dirname,
-  '../../public/dist/web/loadable-stats.json'
-);
+const webStats = path.resolve(__dirname, statsPath('web'));
 
 app.get('*', (req, res) => {
   // check if a current route has a request that needs to be waited for

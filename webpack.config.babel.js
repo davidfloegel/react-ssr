@@ -2,13 +2,18 @@ import path from 'path';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
 import LoadablePlugin from '@loadable/webpack-plugin';
+import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 
 import { alias } from './shared.config';
 
-const DIST_PATH = path.join(__dirname, 'public/dist');
 const production = process.env.NODE_ENV === 'production';
 const development =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
+const DIST_PATH = path.resolve(
+  __dirname,
+  development ? 'public/dist' : 'build/dist'
+);
 
 const getConfig = target => {
   const mainEntry = `./src/client/${
@@ -39,6 +44,17 @@ const getConfig = target => {
     ];
   }
 
+  let minimizer = [];
+  if (production) {
+    minimizer = [
+      new TerserPlugin({
+        extractComments: 'all',
+        parallel: true,
+        sourceMap: true
+      })
+    ];
+  }
+
   return {
     name: target,
     mode: development ? 'development' : 'production',
@@ -66,7 +82,21 @@ const getConfig = target => {
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
       alias
     },
-    plugins
+    plugins,
+    optimization: {
+      minimizer: [...minimizer, new OptimizeCSSAssetsPlugin({})],
+      splitChunks: {
+        cacheGroups: {
+          vendor: {
+            chunks: 'initial',
+            name: 'vendor',
+            test: 'vendor',
+            enforce: true
+          }
+        }
+      },
+      noEmitOnErrors: true
+    }
   };
 };
 

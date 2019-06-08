@@ -3,7 +3,7 @@
   "rules": {
     "object-literal-sort-keys": false,
     "no-var-requires": false,
-    "no-submodule-imports": [false, "app", "pages", "components", "lib", "typings", "uikit", "util"],
-    "no-implicit-dependencies": [true, "dev", [ "app", "pages", "components", "lib", "typings", "uikit", "util"]]
+    "no-submodule-imports": [false, "app", "pages", "components", "lib", "typings", "uikit", "utils"],
+    "no-implicit-dependencies": [true, "dev", [ "app", "pages", "components", "lib", "typings", "uikit", "utils"]]
   }
 }

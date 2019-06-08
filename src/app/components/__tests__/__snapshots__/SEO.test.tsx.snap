@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SEO Component it renders with a title 1`] = `
+<SEO
+  title="Test TItle"
+/>
+`;

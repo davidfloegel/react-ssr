@@ -21,7 +21,7 @@
       "lib/*": ["./app/lib/*"],
       "typings/*": ["./app/typings/*"],
       "uikit/*": ["./app/uikit/*"],
-      "util/*": ["./app/util/*"]
+      "utils/*": ["./app/utils/*"]
     }
   },
   "include": [

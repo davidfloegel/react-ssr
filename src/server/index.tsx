@@ -4,7 +4,7 @@ import 'regenerator-runtime/runtime';
 import { ChunkExtractor } from '@loadable/server';
 import config from 'app/config';
 import routes from 'app/routes';
-import logger from 'app/util/logger';
+import logger from 'app/utils/logger';
 import chokidar from 'chokidar';
 import cors from 'cors';
 import express from 'express';

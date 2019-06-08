@@ -8,7 +8,7 @@ const alias = {
   lib: './src/app/lib',
   typings: './src/app/typings',
   uikit: './src/app/uikit',
-  util: './src/app/util'
+  utils: './src/app/utils'
 };
 
 module.exports = {

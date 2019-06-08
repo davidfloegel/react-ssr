@@ -3,7 +3,6 @@
 ## TODO
 
 - [ ] BDD Tests
-- [ ] Unit Tests
 - [ ] Clean up server code
 - [ ] Optional config for heroku
 - [ ] Clean up webpack config
@@ -19,6 +18,7 @@
 * React Router 5
 * Styled Components
 * Code Splitting
+* Unit Tests with Jest
 
 ## Installation
 

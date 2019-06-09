@@ -40,7 +40,7 @@ if (config.isDev) {
       publicPath: '/dist/web',
       writeToDisk(filePath: string) {
         return /dist\/node\//.test(filePath) || /loadable-stats/.test(filePath);
-      }
+      },
     })
   );
 
@@ -117,10 +117,10 @@ app.get('*', (req, res) => {
 });
 
 if (config.isDev) {
-  const logMessage = (id: string) => {
-    // eslint-disable-next-line
-    logger.info(`Clearing cache on: /server/${id}`);
-  };
+  // const logMessage = (id: string) => {
+  //   // eslint-disable-next-line
+  //   logger.info(`Clearing cache on: /server/${id}`);
+  // };
 
   // Do "hot-reloading" of express stuff on the server
   // Throw away cached modules and re-require next time
@@ -130,7 +130,7 @@ if (config.isDev) {
   watcher.on('ready', () => {
     Object.keys(require.cache).forEach(id => {
       if (/[/\\]server[/\\]/.test(id)) {
-        logMessage(id.split(/[/\\]server[/\\]/)[1]);
+        // logMessage(id.split(/[/\\]server[/\\]/)[1]);
         delete require.cache[id];
       }
     });
@@ -140,13 +140,13 @@ if (config.isDev) {
   // Throw away the cached client modules and let them be re-required next time
   compiler.plugin('done', () => {
     // eslint-disable-next-line
-    logMessage('Clearing /client/ module cache from server');
+    // logMessage('Clearing /client/ module cache from server');
     Object.keys(require.cache).forEach(id => {
       if (/[/\\]client[/\\]/.test(id)) {
-        logMessage(id.split(/[/\\]client[/\\]/)[1]);
+        // logMessage(id.split(/[/\\]client[/\\]/)[1]);
         delete require.cache[id];
       } else if (/[/\\]app[/\\]/.test(id)) {
-        logMessage(id.split(/[/\\]app[/\\]/)[1]);
+        // logMessage(id.split(/[/\\]app[/\\]/)[1]);
         delete require.cache[id];
       }
     });

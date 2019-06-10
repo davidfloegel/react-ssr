@@ -33,18 +33,25 @@ if (config.isDev) {
 
   compiler = webpack(webpackConfig);
 
-  app.use(
-    webpackDevMiddleware(compiler, {
-      logLevel: 'silent',
-      noInfo: true,
-      publicPath: '/dist/web',
-      writeToDisk(filePath: string) {
-        return /dist\/node\//.test(filePath) || /loadable-stats/.test(filePath);
-      },
-    })
-  );
+  const instance = webpackDevMiddleware(compiler, {
+    logLevel: 'silent',
+    noInfo: true,
+    publicPath: '/dist/web',
+    writeToDisk(filePath: string) {
+      return /dist\/node\//.test(filePath) || /loadable-stats/.test(filePath);
+    },
+  });
+  app.use(instance);
+
+  instance.waitUntilValid(() => {
+    logger.info('All bundles compiled');
+
+    app.emit('ready');
+  });
 
   app.use(require('webpack-hot-middleware')(compiler));
+} else {
+  app.emit('ready');
 }
 
 const statsPath = (env: string) =>
@@ -74,6 +81,8 @@ app.get('*', (req, res) => {
     const nodeExtractor = new ChunkExtractor({ statsFile: nodeStats });
     const { default: App }: any = nodeExtractor.requireEntrypoint();
     const webExtractor = new ChunkExtractor({ statsFile: webStats });
+
+    logger.info('tries rendering');
 
     // render the app in the static router
     const routerApp = (
@@ -117,11 +126,6 @@ app.get('*', (req, res) => {
 });
 
 if (config.isDev) {
-  // const logMessage = (id: string) => {
-  //   // eslint-disable-next-line
-  //   logger.info(`Clearing cache on: /server/${id}`);
-  // };
-
   // Do "hot-reloading" of express stuff on the server
   // Throw away cached modules and re-require next time
   // Ensure there's no important state in there!
@@ -130,7 +134,6 @@ if (config.isDev) {
   watcher.on('ready', () => {
     Object.keys(require.cache).forEach(id => {
       if (/[/\\]server[/\\]/.test(id)) {
-        // logMessage(id.split(/[/\\]server[/\\]/)[1]);
         delete require.cache[id];
       }
     });
@@ -143,14 +146,14 @@ if (config.isDev) {
     // logMessage('Clearing /client/ module cache from server');
     Object.keys(require.cache).forEach(id => {
       if (/[/\\]client[/\\]/.test(id)) {
-        // logMessage(id.split(/[/\\]client[/\\]/)[1]);
         delete require.cache[id];
       } else if (/[/\\]app[/\\]/.test(id)) {
-        // logMessage(id.split(/[/\\]app[/\\]/)[1]);
         delete require.cache[id];
       }
     });
   });
 }
 
-app.listen(port, () => logger.info(`App listening on port ${port}!`));
+app.on('ready', () => {
+  app.listen(port, () => logger.info(`App listening on port ${port}!`));
+});
